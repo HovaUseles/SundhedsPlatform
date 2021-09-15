@@ -28,9 +28,9 @@ namespace SundhedsPlatform
                     Console.WriteLine("[2] - Find existing journal");
                     Console.WriteLine();
 
-                    ConsoleKey mainMenuChoice = Console.ReadKey().Key;
+                    ConsoleKey menuChoice = Console.ReadKey().Key;
 
-                    switch (mainMenuChoice)
+                    switch (menuChoice)
                     {
                         case ConsoleKey.Escape:
                             looper = false;
@@ -98,8 +98,8 @@ namespace SundhedsPlatform
                     Console.WriteLine("[ENTER] - accept and create journal");
                     Console.WriteLine();
 
-                    ConsoleKey journalMenuChoice = Console.ReadKey().Key;
-                    switch (journalMenuChoice)
+                    ConsoleKey menuChoice = Console.ReadKey().Key;
+                    switch (menuChoice)
                     {
                         case ConsoleKey.Escape:
                             return;
@@ -154,9 +154,9 @@ namespace SundhedsPlatform
                         Console.WriteLine("[ENTER] - Try again");
                         Console.WriteLine();
 
-                        ConsoleKey journalMenuChoice = Console.ReadKey().Key;
+                        ConsoleKey menuChoice = Console.ReadKey().Key;
 
-                        switch (journalMenuChoice)
+                        switch (menuChoice)
                         {
                             case ConsoleKey.Escape:
                                 return;
@@ -205,9 +205,9 @@ namespace SundhedsPlatform
                         Console.WriteLine(patient.Entries[currentEntry].Description.Replace("[newline]", "\n"));
                     }
 
-                    ConsoleKey journalMenuChoice = Console.ReadKey().Key;
+                    ConsoleKey menuChoice = Console.ReadKey().Key;
 
-                    switch (journalMenuChoice)
+                    switch (menuChoice)
                     {
                         case ConsoleKey.Escape:
                             return;
@@ -269,8 +269,8 @@ namespace SundhedsPlatform
                     Console.WriteLine("[ESC] - discard and exit");
                     Console.WriteLine("[ENTER] - Create new journal entry");
 
-                    ConsoleKey journalMenuChoice = Console.ReadKey().Key;
-                    switch (journalMenuChoice)
+                    ConsoleKey menuChoice = Console.ReadKey().Key;
+                    switch (menuChoice)
                     {
                         case ConsoleKey.Escape:
                             return;
