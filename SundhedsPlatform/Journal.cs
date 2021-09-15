@@ -12,22 +12,28 @@ namespace SundhedsPlatform
         private string address;
         private string phone;
         private string email;
-        private uint cpr;
+        private string cpr;
         private string doctor;
         private List<JournalEntry> entries;
+
+        // Constructor
         public Journal(string[] details)
         {
             this.Name = details[0];
             this.Address = details[1];
             this.Phone = details[2];
             this.Email = details[3];
-            this.Cpr = Convert.ToUInt32(details[4]);
+            this.Cpr = details[4];
             this.Doctor = details[5];
+            this.entries = new List<JournalEntry>();
         }
+
+        // Creating and adding journal entries
         public JournalEntry AddJournalEntry(string doctorInput, string descriptionInput, string dateOfCreation = null)
         {
             JournalEntry entry = new JournalEntry(doctorInput, descriptionInput, dateOfCreation);
-            this.entries.Add(entry);
+            // Always puts the newer entries first in list
+            this.entries.Insert(0, entry);
             return entry;
         }
 
@@ -76,7 +82,7 @@ namespace SundhedsPlatform
                 this.email = value;
             }
         }
-        public uint Cpr
+        public string Cpr
         {
             get
             {

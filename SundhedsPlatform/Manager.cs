@@ -13,52 +13,94 @@ namespace SundhedsPlatform
         public Manager()
         {
             //Default constructor
-
         }
-        public Journal CreateJournal(string[] details)
+
+        // Creates a new journal and returns an journal object to the GUI
+        // Then stores the object in a file.
+        #region Create new Journal
+        public Journal CreateJournal(string[] details, out bool fileExist)
         {
             Journal patient = connector.JournalCreation(details);
-            dal.CreateFile(patient);
+            fileExist = dal.CreateFile(patient);
+
+            // If file already exist loads that file instead
+            if (fileExist)
+            {
+                patient = LoadJournal(details[4], out fileExist);
+            }
             return patient;
         }
+        #endregion
 
+        // Creates a new entry and adds it to the correct file
+        #region Create entry
         public void CreateEntry(Journal patient, string doctor, string description, string dateOfCreation = null)
         {
+            // Creates a new journal entry
             JournalEntry entry = patient.AddJournalEntry(doctor, description, dateOfCreation);
             dal.AddToFile(patient.Cpr, entry);
         }
+        #endregion
 
-        // Calls the method for importing a file 
-        public Journal LoadJournal(uint cpr, out string ageYD, out bool fileExist)
+        // Method for importing a file 
+        #region Load journal from file
+        public Journal LoadJournal(string cpr, out bool fileExist)
         {
             string[,] entries;
-            string[] patientDetails = dal.LoadFromFile(cpr, out entries);
+            string[] patientDetails;
+            dal.LoadFromFile(cpr, out patientDetails, out entries);
             if (patientDetails != null)
             {
-                // Using cpr number to calculate the age of the 
-                ageYD = connector.AgeCalculator(cpr);
                 // Tells the GUI that the file was found and returns a journal object
                 fileExist = true;
-                Journal patient = CreateJournal(patientDetails);
+                Journal patient = connector.JournalCreation(patientDetails);
 
                 // Creates journal entries from the file loaded
                 for (int i = 0; i < entries.GetLength(0); i++)
                 {
-                    CreateEntry(patient, entries[i, 1], entries[i, 2], entries[i, 0]);
+                    patient.AddJournalEntry(entries[i, 1], entries[i, 2], entries[i, 0]);
                 }
                 return patient;
             }
             else
             {
-                ageYD = "";
                 fileExist = false;
                 return null;
             }
         }
+        #endregion
 
-        public JournalEntry JournalNavigator(sbyte key)
+        // Converts CPR number to persons age in format of years + days
+        #region Age Calculator
+        public string AgeToYD(string cpr)
         {
+            // Using cpr number to calculate the age of the 
+            string birthDay;
+            string birthMonth;
+            string birthYear;
+            connector.AgeCalculator(cpr, out birthDay, out birthMonth, out birthYear);
+            string ageYD = connector.BirthdayToYD(birthDay, birthMonth, birthYear);
 
+            return ageYD;
         }
+        #endregion
+
+        // Returns a number used to navigate through journal entries in a journal
+        #region Journal Navigator
+        public int JournalNavigator(sbyte key, int currentEntry, int entriesNumber)
+        {
+            currentEntry = connector.JournalNavigator(key, currentEntry, entriesNumber);
+            return currentEntry;
+        }
+        #endregion
+
+        // Checks if the cpr is only digits, correct length and within an actual date
+        #region CPR Checker
+        public bool CprChecker(string cpr)
+        {
+            bool isDigits = connector.CprChecker(cpr);
+            return isDigits;
+        }
+        #endregion
     }
 }
